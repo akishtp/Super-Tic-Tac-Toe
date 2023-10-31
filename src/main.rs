@@ -1,20 +1,22 @@
 use std::io;
 
-const TABLE:[[char;9];9] = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+static TABLE:[[char;9];9] = [
+    [' ', ' ', ' ', ' ', '1', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '2', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '3', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '4', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '5', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '6', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '7', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '8', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', '9', ' ', ' ', ' ', ' ']
 ];
+static inner_table = String::new();
 
 fn main() {
+    let round:i8 = 0;
     draw_table();
-    play();
+    play(round);
 }
 
 fn draw_table(){
@@ -34,13 +36,14 @@ fn draw_table(){
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn play(){
-    let mut inner_table = String::new();
-    io::stdin()
-        .read_line(&mut inner_table)
-        .expect("Failed to read line");
-
-    let inner_table: u32 = inner_table.trim().parse().expect("Please type a number!");
-    println!("{}", inner_table);
+fn play(round:i8){
+    if round==0{
+        println!("Which box to start at?");
+        io::stdin()
+            .read_line(&mut inner_table)
+            .expect("Failed to read line");
+        let inner_table: i8 = inner_table.trim().parse().expect("Please type a number!");
+        println!("{}", inner_table);
+    }
 }
 
