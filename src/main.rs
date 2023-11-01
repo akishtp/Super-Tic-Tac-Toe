@@ -1,47 +1,36 @@
 use std::io;
 
-static TABLE:[[char;9];9] = [
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
-];
-
 fn main() {
+    let mut table:[[char;9];9] = [
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
+    ];
     let mut selected_table: usize = 10;
     let mut player: char = 'x';
-    select_table(&mut selected_table);
-    play(selected_table, player);
-
-    draw_table(selected_table);
+    select_table(&mut selected_table, table);
+    play(selected_table, player, &mut table);
+    draw_table(selected_table, table);
 }
 
-fn play(selected_table :usize, player: char) {
-    draw_table(selected_table);
+fn play(selected_table :usize, player: char, table: &mut [[char;9];9]) {
+    draw_table(selected_table, *table);
     println!("Player\x1B[1m {}\x1B[0m's turn (1-9):", player);
     loop {
         let mut input = String::new();
-
         io::stdin()
             .read_line(&mut input)
             .expect("Could not read line");
 
-        match input.trim().parse() {
+        match input.trim().parse::<usize>() {
             Ok(number) => {
-                if !(1..=9).contains(number){
-                    println!("Select a number between 1 and 9");
-                    continue;
-                }
-                if TABLE[selected_table - 1][number - 1] == ' ' {
-                    TABLE[selected_table - 1][number - 1] = player;
-                }else{
-                    eprintln!("Select an empty space");
-                }
+                table[selected_table - 1][number - 1] = player;
                 break;
             }
             Err(_) => {
@@ -52,27 +41,27 @@ fn play(selected_table :usize, player: char) {
     }
 }
 
-fn draw_table(selected_table: usize) {
+fn draw_table(selected_table: usize, table: [[char;9];9]) {
     clearscreen::clear().expect("failed to clear screen");
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
 
 
     if selected_table == 1{
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[0][0], table[0][1], table[0][2], table[1][0], table[1][1], table[1][2], table[2][0], table[2][1], table[2][2]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[0][3], table[0][4], table[0][5], table[1][3], table[1][4], table[1][5], table[2][3], table[2][4], table[2][5]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[0][6], table[0][7], table[0][8], table[1][6], table[1][7], table[1][8], table[2][6], table[2][7], table[2][8]);
     }else if selected_table == 2{
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[0][0], table[0][1], table[0][2], table[1][0], table[1][1], table[1][2], table[2][0], table[2][1], table[2][2]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[0][3], table[0][4], table[0][5], table[1][3], table[1][4], table[1][5], table[2][3], table[2][4], table[2][5]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[0][6], table[0][7], table[0][8], table[1][6], table[1][7], table[1][8], table[2][6], table[2][7], table[2][8]);
     }else if selected_table == 3{
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[0][0], table[0][1], table[0][2], table[1][0], table[1][1], table[1][2], table[2][0], table[2][1], table[2][2]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[0][3], table[0][4], table[0][5], table[1][3], table[1][4], table[1][5], table[2][3], table[2][4], table[2][5]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[0][6], table[0][7], table[0][8], table[1][6], table[1][7], table[1][8], table[2][6], table[2][7], table[2][8]);
     }else{
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[0][0], table[0][1], table[0][2], table[1][0], table[1][1], table[1][2], table[2][0], table[2][1], table[2][2]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[0][3], table[0][4], table[0][5], table[1][3], table[1][4], table[1][5], table[2][3], table[2][4], table[2][5]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[0][6], table[0][7], table[0][8], table[1][6], table[1][7], table[1][8], table[2][6], table[2][7], table[2][8]);
     }
 
 
@@ -80,21 +69,21 @@ fn draw_table(selected_table: usize) {
 
 
     if selected_table == 4{
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[3][0], table[3][1], table[3][2], table[4][0], table[4][1], table[4][2], table[5][0], table[5][1], table[5][2]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[3][3], table[3][4], table[3][5], table[4][3], table[4][4], table[4][5], table[5][3], table[5][4], table[5][5]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[3][6], table[3][7], table[3][8], table[4][6], table[4][7], table[4][8], table[5][6], table[5][7], table[5][8]);
     }else if selected_table == 5{
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[3][0], table[3][1], table[3][2], table[4][0], table[4][1], table[4][2], table[5][0], table[5][1], table[5][2]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[3][3], table[3][4], table[3][5], table[4][3], table[4][4], table[4][5], table[5][3], table[5][4], table[5][5]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[3][6], table[3][7], table[3][8], table[4][6], table[4][7], table[4][8], table[5][6], table[5][7], table[5][8]);
     }else if selected_table == 6{
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[3][0], table[3][1], table[3][2], table[4][0], table[4][1], table[4][2], table[5][0], table[5][1], table[5][2]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[3][3], table[3][4], table[3][5], table[4][3], table[4][4], table[4][5], table[5][3], table[5][4], table[5][5]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[3][6], table[3][7], table[3][8], table[4][6], table[4][7], table[4][8], table[5][6], table[5][7], table[5][8]);
     }else{
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[3][0], table[3][1], table[3][2], table[4][0], table[4][1], table[4][2], table[5][0], table[5][1], table[5][2]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[3][3], table[3][4], table[3][5], table[4][3], table[4][4], table[4][5], table[5][3], table[5][4], table[5][5]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[3][6], table[3][7], table[3][8], table[4][6], table[4][7], table[4][8], table[5][6], table[5][7], table[5][8]);
     }
 
 
@@ -102,29 +91,29 @@ fn draw_table(selected_table: usize) {
 
 
     if selected_table == 7{
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
-        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[6][0], table[6][1], table[6][2], table[7][0], table[7][1], table[7][2], table[8][0], table[8][1], table[8][2]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[6][3], table[6][4], table[6][5], table[7][3], table[7][4], table[7][5], table[8][3], table[8][4], table[8][5]);
+        println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[6][6], table[6][7], table[6][8], table[7][6], table[7][7], table[7][8], table[8][6], table[8][7], table[8][8]);
     }else if selected_table == 8{
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
-        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[6][0], table[6][1], table[6][2], table[7][0], table[7][1], table[7][2], table[8][0], table[8][1], table[8][2]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[6][3], table[6][4], table[6][5], table[7][3], table[7][4], table[7][5], table[8][3], table[8][4], table[8][5]);
+        println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", table[6][6], table[6][7], table[6][8], table[7][6], table[7][7], table[7][8], table[8][6], table[8][7], table[8][8]);
     }else if selected_table == 9{
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[6][0], table[6][1], table[6][2], table[7][0], table[7][1], table[7][2], table[8][0], table[8][1], table[8][2]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[6][3], table[6][4], table[6][5], table[7][3], table[7][4], table[7][5], table[8][3], table[8][4], table[8][5]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", table[6][6], table[6][7], table[6][8], table[7][6], table[7][7], table[7][8], table[8][6], table[8][7], table[8][8]);
     }else{
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
-        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[6][0], table[6][1], table[6][2], table[7][0], table[7][1], table[7][2], table[8][0], table[8][1], table[8][2]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[6][3], table[6][4], table[6][5], table[7][3], table[7][4], table[7][5], table[8][3], table[8][4], table[8][5]);
+        println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", table[6][6], table[6][7], table[6][8], table[7][6], table[7][7], table[7][8], table[8][6], table[8][7], table[8][8]);
     }
 
 
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn select_table(selected_table: &mut usize){
-    draw_table(*selected_table);
+fn select_table(selected_table: &mut usize, table: [[char;9];9]){
+    draw_table(*selected_table, table);
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
     println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
     println!("│ │ ╎1╎ │ │ ╎2╎ │ │ ╎3╎ │ │");
