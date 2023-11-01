@@ -13,13 +13,47 @@ static TABLE:[[char;9];9] = [
 ];
 
 fn main() {
-    let mut selected_table:i8 = 10;
+    let mut selected_table: usize = 10;
+    let mut player: char = 'x';
     select_table(&mut selected_table);
+    play(selected_table, player);
+
     draw_table(selected_table);
 }
 
-fn draw_table(selected_table: i8) {
-//    clearscreen::clear().expect("failed to clear screen");
+fn play(selected_table :usize, player: char) {
+    draw_table(selected_table);
+    println!("Player\x1B[1m {}\x1B[0m's turn (1-9):", player);
+    loop {
+        let mut input = String::new();
+
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Could not read line");
+
+        match input.trim().parse() {
+            Ok(number) => {
+                if !(1..=9).contains(number){
+                    println!("Select a number between 1 and 9");
+                    continue;
+                }
+                if TABLE[selected_table - 1][number - 1] == ' ' {
+                    TABLE[selected_table - 1][number - 1] = player;
+                }else{
+                    eprintln!("Select an empty space");
+                }
+                break;
+            }
+            Err(_) => {
+                eprintln!("Select a number between 1 and 9");
+                continue;
+            }
+        }
+    }
+}
+
+fn draw_table(selected_table: usize) {
+    clearscreen::clear().expect("failed to clear screen");
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
 
 
@@ -89,7 +123,7 @@ fn draw_table(selected_table: i8) {
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn select_table(selected_table: &mut i8){
+fn select_table(selected_table: &mut usize){
     draw_table(*selected_table);
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
     println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
