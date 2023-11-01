@@ -1,22 +1,22 @@
 use std::io;
 
 static TABLE:[[char;9];9] = [
-    [' ', ' ', ' ', ' ', '1', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '2', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '3', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '4', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '5', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '6', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '7', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '8', ' ', ' ', ' ', ' '],
-    [' ', ' ', ' ', ' ', '9', ' ', ' ', ' ', ' ']
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
 ];
 
 fn main() {
     let round:i8 = 0;
     let mut selected_table:i8 = 0;
+    selected_table = select_table(selected_table.to_string());
     draw_table(selected_table);
-    play(round, selected_table.to_string());
 }
 
 fn draw_table(selected_table:i8) {
@@ -90,18 +90,32 @@ fn draw_table(selected_table:i8) {
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn play(round:i8, mut selected_table:String) {
-    if round==0{
-        println!("Which box to start at?");
-        io::stdin()
-            .read_line(&mut selected_table)
-            .expect("Failed to read line");
-        let selected_table: i8 = selected_table.trim().parse().expect("Please type a number!");
-        println!("{}", selected_table);
-    }
-}
+fn select_table(mut selected_table: String) -> i8{
+    draw_table(selected_table.parse::<i8>().unwrap());
+    println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
+    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    println!("│ │ ╎1╎ │ │ ╎2╎ │ │ ╎3╎ │ │");
+    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    println!("├─┼─────┼─┼─────┼─┼─────┼─┤");
+    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    println!("│ │ ╎4╎ │ │ ╎5╎ │ │ ╎6╎ │ │");
+    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    println!("├─┼─────┼─┼─────┼─┼─────┼─┤"); 
+    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    println!("│ │ ╎7╎ │ │ ╎8╎ │ │ ╎9╎ │ │");
+    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
+    println!("Which box do you want to play?");
+    io::stdin()
+        .read_line(&mut selected_table)
+        .expect("Failed to read line");
+    let mut selected_table: i8 = selected_table.trim().parse().expect("Please type a number!");
 
-fn select_table(selected_table: String){
-    
+    if selected_table < 1 || selected_table > 9{
+        println!("Select a number between 1 and 9");
+        selected_table = select_table(selected_table.to_string());
+    }
+
+    selected_table - 1
 }
 
