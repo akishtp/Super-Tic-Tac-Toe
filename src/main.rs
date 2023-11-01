@@ -13,9 +13,8 @@ static TABLE:[[char;9];9] = [
 ];
 
 fn main() {
-    let round:i8 = 0;
-    let mut selected_table:i8 = 0;
-    selected_table = select_table(selected_table.to_string());
+    let selected_table:i8 = 10;
+    select_table(&mut selected_table.to_string());
     draw_table(selected_table);
 }
 
@@ -90,7 +89,7 @@ fn draw_table(selected_table:i8) {
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn select_table(mut selected_table: String) -> i8{
+fn select_table(selected_table: &mut String){
     draw_table(selected_table.parse::<i8>().unwrap());
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
     println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
@@ -106,16 +105,19 @@ fn select_table(mut selected_table: String) -> i8{
     println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
     println!("Which box do you want to play?");
-    io::stdin()
-        .read_line(&mut selected_table)
-        .expect("Failed to read line");
-    let mut selected_table: i8 = selected_table.trim().parse().expect("Please type a number!");
-
-    if selected_table < 1 || selected_table > 9{
-        println!("Select a number between 1 and 9");
-        selected_table = select_table(selected_table.to_string());
+    selected_table.clear();
+    match io::stdin().read_line(selected_table){
+        Ok(_) => {
+            let selected_table: i8 = selected_table.trim().parse().expect("Please type a number!");
+            if selected_table < 1 || selected_table > 9{
+                println!("Select a number between 1 and 9");
+                select_table(&mut selected_table.to_string());
+            }
+        }
+        Err(_) => {
+            println!("Try a smaller number next time");
+            select_table(&mut selected_table.to_string());
+        }
     }
-
-    selected_table - 1
 }
 
