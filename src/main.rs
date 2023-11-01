@@ -13,27 +13,25 @@ static TABLE:[[char;9];9] = [
 ];
 
 fn main() {
-    let selected_table:i8 = 10;
-    select_table(&mut selected_table.to_string());
-    println!("after it is {}", selected_table);
+    let mut selected_table:i8 = 10;
+    select_table(&mut selected_table);
     draw_table(selected_table);
 }
 
-fn draw_table(selected_table:i8) {
+fn draw_table(selected_table: i8) {
 //    clearscreen::clear().expect("failed to clear screen");
-    println!("da selected table is {}", selected_table);
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
 
 
-    if selected_table == 0{
+    if selected_table == 1{
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
-    }else if selected_table == 1{
+    }else if selected_table == 2{
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
-    }else if selected_table == 2{
+    }else if selected_table == 3{
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[0][0], TABLE[0][1], TABLE[0][2], TABLE[1][0], TABLE[1][1], TABLE[1][2], TABLE[2][0], TABLE[2][1], TABLE[2][2]);
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[0][3], TABLE[0][4], TABLE[0][5], TABLE[1][3], TABLE[1][4], TABLE[1][5], TABLE[2][3], TABLE[2][4], TABLE[2][5]);
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[0][6], TABLE[0][7], TABLE[0][8], TABLE[1][6], TABLE[1][7], TABLE[1][8], TABLE[2][6], TABLE[2][7], TABLE[2][8]);
@@ -47,15 +45,15 @@ fn draw_table(selected_table:i8) {
     println!("├─┼─────┼─┼─────┼─┼─────┼─┤");
 
 
-    if selected_table == 3{
+    if selected_table == 4{
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
-    }else if selected_table == 4{
+    }else if selected_table == 5{
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
-    }else if selected_table == 5{
+    }else if selected_table == 6{
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[3][0], TABLE[3][1], TABLE[3][2], TABLE[4][0], TABLE[4][1], TABLE[4][2], TABLE[5][0], TABLE[5][1], TABLE[5][2]);
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[3][3], TABLE[3][4], TABLE[3][5], TABLE[4][3], TABLE[4][4], TABLE[4][5], TABLE[5][3], TABLE[5][4], TABLE[5][5]);
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[3][6], TABLE[3][7], TABLE[3][8], TABLE[4][6], TABLE[4][7], TABLE[4][8], TABLE[5][6], TABLE[5][7], TABLE[5][8]);
@@ -69,15 +67,15 @@ fn draw_table(selected_table:i8) {
     println!("├─┼─────┼─┼─────┼─┼─────┼─┤");
 
 
-    if selected_table == 6{
+    if selected_table == 7{
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
         println!("│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │{}╎{}╎{}│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
-    }else if selected_table == 7{
+    }else if selected_table == 8{
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
         println!("│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │{}╎{}╎{}│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
-    }else if selected_table == 8{
+    }else if selected_table == 9{
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[6][0], TABLE[6][1], TABLE[6][2], TABLE[7][0], TABLE[7][1], TABLE[7][2], TABLE[8][0], TABLE[8][1], TABLE[8][2]);
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[6][3], TABLE[6][4], TABLE[6][5], TABLE[7][3], TABLE[7][4], TABLE[7][5], TABLE[8][3], TABLE[8][4], TABLE[8][5]);
         println!("│ │{}╎{}╎{}│ │{}╎{}╎{}│ │\x1b[93m{}|{}|{}\x1b[0m│ │", TABLE[6][6], TABLE[6][7], TABLE[6][8], TABLE[7][6], TABLE[7][7], TABLE[7][8], TABLE[8][6], TABLE[8][7], TABLE[8][8]);
@@ -91,9 +89,8 @@ fn draw_table(selected_table:i8) {
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn select_table(selected_table: &mut String){
-    draw_table(selected_table.parse::<i8>().unwrap());
-    selected_table.clear();
+fn select_table(selected_table: &mut i8){
+    draw_table(*selected_table);
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
     println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
     println!("│ │ ╎1╎ │ │ ╎2╎ │ │ ╎3╎ │ │");
@@ -109,22 +106,28 @@ fn select_table(selected_table: &mut String){
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
     println!("Which box do you want to play?");
     
-    io::stdin()
-        .read_line(selected_table)
-        .expect("Could not read line");
-    
-    let selected_table: i8 = match selected_table.trim().parse() {
-        Ok(n) => n,
-        Err(_) => {
-            eprintln!("Enter a smaller positive number");
-            select_table(&mut selected_table.to_string());
-            return;
-        }
-    };
-    if selected_table < 1 || selected_table > 9{
-        println!("Select a number between 1 and 9");
-        select_table(&mut selected_table.to_string());
-    }
+    loop {
+        let mut input = String::new();
 
+        io::stdin()
+            .read_line(&mut input)
+            .expect("Could not read line");
+    
+        match input.trim().parse() {
+            Ok(number) => {
+                *selected_table = number;
+
+                if !(1..=9).contains(selected_table){
+                    println!("Select a number between 1 and 9");
+                    continue;
+                }
+                break;
+            }
+            Err(_) => {
+                eprintln!("Enter a smaller positive number");
+                continue;
+            }
+        }
+    }
 }
 
