@@ -2,7 +2,7 @@ use std::io;
 
 fn main() {
     let mut table:[[char;9];9] = [
-        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+        ['x', 'x', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -14,7 +14,7 @@ fn main() {
     ];
     let mut selected_table: usize = 10;
     let mut player: char = 'x';
-    select_table(&mut selected_table, table);
+    select_table(&mut selected_table, table, player);
  
     loop{
         play(&mut selected_table, &mut player, &mut table);
@@ -23,6 +23,8 @@ fn main() {
 }
 
 fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]) {
+    //clearscreen::clear().expect("failed to clear screen");
+    println!("\x1B[1m** PLAYER {}'s TURN **\x1B[0m", player);
     draw_table(*selected_table, *table);
     println!("Player\x1B[1m {}\x1B[0m's turn \x1B[1m(1-9)\x1B[0m:", player);
     loop {
@@ -37,17 +39,26 @@ fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]
                     println!("Select a number between 1 and 9");
                     continue;
                 }
-                if table[*selected_table - 1][number -1] != ' '{
+                if table[*selected_table - 1][number - 1] != ' '{
                     println!("Please select an empty space");
                     continue;
                 }
 
-                table[*selected_table -1][number -1] = *player;
+                table[*selected_table - 1][number - 1] = *player;
+                
+                check_table(*selected_table, table, *player);
+
                 *selected_table = number;
+                
+
                 if *player == 'x' {
                     *player = 'o';
                 } else {
                     *player = 'x';
+                }
+
+                if table[*selected_table - 1][1] == '─'{
+                    select_table(selected_table, *table, *player);
                 }
 
                 break;
@@ -60,8 +71,28 @@ fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]
     }
 }
 
+fn check_table(selected_table: usize, table: &mut [[char;9];9], player: char){
+    if (table[selected_table - 1][0] != ' ' && table[selected_table - 1][0] == table[selected_table - 1][1] && table[selected_table - 1][0] == table[selected_table - 1][2]) ||
+        (table[selected_table - 1][3] != ' ' && table[selected_table - 1][3] == table[selected_table - 1][4] && table[selected_table - 1][3] == table[selected_table - 1][5]) ||
+        (table[selected_table - 1][6] != ' ' && table[selected_table - 1][6] == table[selected_table - 1][7] && table[selected_table - 1][6] == table[selected_table - 1][8]) ||
+        (table[selected_table - 1][0] != ' ' && table[selected_table - 1][0] == table[selected_table - 1][3] && table[selected_table - 1][0] == table[selected_table - 1][6]) ||
+        (table[selected_table - 1][1] != ' ' && table[selected_table - 1][1] == table[selected_table - 1][4] && table[selected_table - 1][1] == table[selected_table - 1][7]) ||
+        (table[selected_table - 1][2] != ' ' && table[selected_table - 1][2] == table[selected_table - 1][5] && table[selected_table - 1][2] == table[selected_table - 1][8]) ||
+        (table[selected_table - 1][0] != ' ' && table[selected_table - 1][0] == table[selected_table - 1][4] && table[selected_table - 1][0] == table[selected_table - 1][8]) ||
+        (table[selected_table - 1][2] != ' ' && table[selected_table - 1][2] == table[selected_table - 1][4] && table[selected_table - 1][2] == table[selected_table - 1][6]) {
+        table[selected_table - 1][0] = '┌';
+        table[selected_table - 1][1] = '─';
+        table[selected_table - 1][2] = '┐';
+        table[selected_table - 1][3] = '│';
+        table[selected_table - 1][4] = player;
+        table[selected_table - 1][5] = '│';
+        table[selected_table - 1][6] = '└';
+        table[selected_table - 1][7] = '─';
+        table[selected_table - 1][8] = '┘';
+        }    
+}
+
 fn draw_table(selected_table: usize, table: [[char;9];9]) {
-    //clearscreen::clear().expect("failed to clear screen");
     println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
 
 
@@ -131,22 +162,25 @@ fn draw_table(selected_table: usize, table: [[char;9];9]) {
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn select_table(selected_table: &mut usize, table: [[char;9];9]){
+fn select_table(selected_table: &mut usize, table: [[char;9];9], player: char){
+    //clearscreen::clear().expect("failed to clear screen");
+    *selected_table = 10;
+    println!("\x1B[1m\x1B[4m** SELECT A TABLE **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, table);
-    println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
-    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    println!("│ │ ╎1╎ │ │ ╎2╎ │ │ ╎3╎ │ │");
-    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    println!("├─┼─────┼─┼─────┼─┼─────┼─┤");
-    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    println!("│ │ ╎4╎ │ │ ╎5╎ │ │ ╎6╎ │ │");
-    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    println!("├─┼─────┼─┼─────┼─┼─────┼─┤"); 
-    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    println!("│ │ ╎7╎ │ │ ╎8╎ │ │ ╎9╎ │ │");
-    println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
-    println!("Which box do you want to play?");
+    //println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
+    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    //println!("│ │ ╎1╎ │ │ ╎2╎ │ │ ╎3╎ │ │");
+    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    //println!("├─┼─────┼─┼─────┼─┼─────┼─┤");
+    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    //println!("│ │ ╎4╎ │ │ ╎5╎ │ │ ╎6╎ │ │");
+    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    //println!("├─┼─────┼─┼─────┼─┼─────┼─┤"); 
+    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    //println!("│ │ ╎7╎ │ │ ╎8╎ │ │ ╎9╎ │ │");
+    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
+    //println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
+    println!("Which box do you want to play, \x1B[1m{}\x1B[0m? \x1B[1m(1-9)\x1B[0m", player);
     
     loop {
         let mut input = String::new();
@@ -161,6 +195,10 @@ fn select_table(selected_table: &mut usize, table: [[char;9];9]){
 
                 if !(1..=9).contains(selected_table){
                     println!("Select a number between 1 and 9");
+                    continue;
+                }
+                if table[*selected_table - 1][1] == '─' {
+                    println!("Select a playable table");
                     continue;
                 }
                 break;
