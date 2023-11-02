@@ -2,7 +2,7 @@ use std::io;
 
 fn main() {
     let mut table:[[char;9];9] = [
-        ['x', 'x', 'x', ' ', ' ', ' ', ' ', ' ', ' '],
+        [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
@@ -23,8 +23,8 @@ fn main() {
 }
 
 fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]) {
-    //clearscreen::clear().expect("failed to clear screen");
-    println!("\x1B[1m** PLAYER {}'s TURN **\x1B[0m", player);
+    clearscreen::clear().expect("failed to clear screen");
+    println!("\x1B[1m\x1B[4m** PLAY GAME **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, *table);
     println!("Player\x1B[1m {}\x1B[0m's turn \x1B[1m(1-9)\x1B[0m:", player);
     loop {
@@ -163,7 +163,7 @@ fn draw_table(selected_table: usize, table: [[char;9];9]) {
 }
 
 fn select_table(selected_table: &mut usize, table: [[char;9];9], player: char){
-    //clearscreen::clear().expect("failed to clear screen");
+    clearscreen::clear().expect("failed to clear screen");
     *selected_table = 10;
     println!("\x1B[1m\x1B[4m** SELECT A TABLE **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, table);
