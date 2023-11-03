@@ -14,11 +14,15 @@ fn main() {
     ];
     let mut selected_table: usize = 10;
     let mut player: char = 'x';
+    let mut game_over: bool = false;
     select_table(&mut selected_table, table, player);
  
     loop{
+        game_over = check_game(&mut selected_table, &mut table, player);
+        if game_over == true{
+            break;
+        }
         play(&mut selected_table, &mut player, &mut table);
-        draw_table(selected_table, table);
     }
 }
 
@@ -72,14 +76,14 @@ fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]
 }
 
 fn check_table(selected_table: usize, table: &mut [[char;9];9], player: char){
-    if (table[selected_table - 1][0] != ' ' && table[selected_table - 1][0] == table[selected_table - 1][1] && table[selected_table - 1][0] == table[selected_table - 1][2]) ||
-        (table[selected_table - 1][3] != ' ' && table[selected_table - 1][3] == table[selected_table - 1][4] && table[selected_table - 1][3] == table[selected_table - 1][5]) ||
-        (table[selected_table - 1][6] != ' ' && table[selected_table - 1][6] == table[selected_table - 1][7] && table[selected_table - 1][6] == table[selected_table - 1][8]) ||
-        (table[selected_table - 1][0] != ' ' && table[selected_table - 1][0] == table[selected_table - 1][3] && table[selected_table - 1][0] == table[selected_table - 1][6]) ||
-        (table[selected_table - 1][1] != ' ' && table[selected_table - 1][1] == table[selected_table - 1][4] && table[selected_table - 1][1] == table[selected_table - 1][7]) ||
-        (table[selected_table - 1][2] != ' ' && table[selected_table - 1][2] == table[selected_table - 1][5] && table[selected_table - 1][2] == table[selected_table - 1][8]) ||
-        (table[selected_table - 1][0] != ' ' && table[selected_table - 1][0] == table[selected_table - 1][4] && table[selected_table - 1][0] == table[selected_table - 1][8]) ||
-        (table[selected_table - 1][2] != ' ' && table[selected_table - 1][2] == table[selected_table - 1][4] && table[selected_table - 1][2] == table[selected_table - 1][6]) {
+    if (table[selected_table - 1][0] == player && table[selected_table - 1][1] == player && table[selected_table - 1][2] == player)||
+    (table[selected_table - 1][3] == player && table[selected_table - 1][4] == player && table[selected_table - 1][5] == player) ||
+    (table[selected_table - 1][6] == player && table[selected_table - 1][7] == player && table[selected_table - 1][8] == player) ||
+    (table[selected_table - 1][0] == player && table[selected_table - 1][3] == player && table[selected_table - 1][6] == player) ||
+    (table[selected_table - 1][1] == player && table[selected_table - 1][4] == player && table[selected_table - 1][7] == player) ||
+    (table[selected_table - 1][2] == player && table[selected_table - 1][5] == player && table[selected_table - 1][8] == player) ||
+    (table[selected_table - 1][0] == player && table[selected_table - 1][4] == player && table[selected_table - 1][8] == player) ||
+    (table[selected_table - 1][2] == player && table[selected_table - 1][4] == player && table[selected_table - 1][6] == player) {
         table[selected_table - 1][0] = '┌';
         table[selected_table - 1][1] = '─';
         table[selected_table - 1][2] = '┐';
@@ -89,7 +93,31 @@ fn check_table(selected_table: usize, table: &mut [[char;9];9], player: char){
         table[selected_table - 1][6] = '└';
         table[selected_table - 1][7] = '─';
         table[selected_table - 1][8] = '┘';
-        }    
+    }
+}
+
+fn check_game(selected_table: &mut usize, table: &mut [[char;9];9], player: char) -> bool{
+    if (table[0][1] == '─' && table[1][1] == '─' && table[2][1] == '─' && table[0][4] == table[1][4] && table[0][4] == table[2][4]) ||
+    (table[3][1] == '─' && table[4][1] == '─' && table[5][1] == '─' && table[3][4] == table[4][4] && table[3][4] == table[5][4]) ||
+    (table[6][1] == '─' && table[7][1] == '─' && table[8][1] == '─' && table[6][4] == table[7][4] && table[6][4] == table[8][4]) ||
+    (table[0][1] == '─' && table[3][1] == '─' && table[6][1] == '─' && table[0][4] == table[3][4] && table[0][4] == table[6][4]) ||
+    (table[1][1] == '─' && table[4][1] == '─' && table[7][1] == '─' && table[1][4] == table[4][4] && table[1][4] == table[7][4]) ||
+    (table[2][1] == '─' && table[5][1] == '─' && table[8][1] == '─' && table[2][4] == table[5][4] && table[2][4] == table[8][4]) ||
+    (table[0][1] == '─' && table[4][1] == '─' && table[8][1] == '─' && table[0][4] == table[4][4] && table[0][4] == table[8][4]) ||
+    (table[2][1] == '─' && table[4][1] == '─' && table[6][1] == '─' && table[2][4] == table[4][4] && table[2][4] == table[6][4]) {
+        clearscreen::clear().expect("failed to clear screen");
+        println!("\x1B[1m\x1B[4m** o Won **\x1B[24m\x1B[0m\n");
+        *selected_table = 10;
+        draw_table(*selected_table, *table);
+        if player == 'x'{
+            println!("\x1B[1m\x1B[4m** o Won **\x1B[24m\x1B[0m\n");
+        }
+        else{
+            println!("\x1B[1m\x1B[4m** x Won **\x1B[24m\x1B[0m\n");
+        }
+    return true;
+    }
+    false
 }
 
 fn draw_table(selected_table: usize, table: [[char;9];9]) {
@@ -167,19 +195,6 @@ fn select_table(selected_table: &mut usize, table: [[char;9];9], player: char){
     *selected_table = 10;
     println!("\x1B[1m\x1B[4m** SELECT A TABLE **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, table);
-    //println!("┌─┬─────┬─┬─────┬─┬─────┬─┐");
-    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    //println!("│ │ ╎1╎ │ │ ╎2╎ │ │ ╎3╎ │ │");
-    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    //println!("├─┼─────┼─┼─────┼─┼─────┼─┤");
-    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    //println!("│ │ ╎4╎ │ │ ╎5╎ │ │ ╎6╎ │ │");
-    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    //println!("├─┼─────┼─┼─────┼─┼─────┼─┤"); 
-    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    //println!("│ │ ╎7╎ │ │ ╎8╎ │ │ ╎9╎ │ │");
-    //println!("│ │ ╎ ╎ │ │ ╎ ╎ │ │ ╎ ╎ │ │");
-    //println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
     println!("Which box do you want to play, \x1B[1m{}\x1B[0m? \x1B[1m(1-9)\x1B[0m", player);
     
     loop {
