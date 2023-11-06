@@ -18,11 +18,11 @@ fn main() {
     select_table(&mut selected_table, table, player);
  
     loop{
-        game_over = check_game(&mut selected_table, &mut table, player);
         if game_over == true{
             break;
         }
         play(&mut selected_table, &mut player, &mut table);
+        game_over = check_game(&mut selected_table, &mut table, player);
     }
 }
 
