@@ -15,6 +15,8 @@ fn main() {
     let mut selected_table: usize = 10;
     let mut player: char = 'x';
     let mut game_over: bool = false;
+
+    menu();
     select_table(&mut selected_table, table, player);
  
     loop{
@@ -24,6 +26,10 @@ fn main() {
         play(&mut selected_table, &mut player, &mut table);
         game_over = check_game(&mut selected_table, &mut table, player);
     }
+}
+
+fn menu() {
+    aarty -m aa.png
 }
 
 fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]) {
