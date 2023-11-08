@@ -1,4 +1,5 @@
 use std::io;
+use std::fs;
 
 fn main() {
     let mut table:[[char;9];9] = [
@@ -13,30 +14,51 @@ fn main() {
         [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ']
     ];
     let mut selected_table: usize = 10;
-    let mut player: char = 'x';
+    let mut curr_player: char = 'x';
     let mut game_over: bool = false;
+    let mut game_type: i8 = 0;
 
-    menu();
-    select_table(&mut selected_table, table, player);
+    menu(&mut game_type);
+    select_table(&mut selected_table, table, curr_player);
  
     loop{
         if game_over == true{
             break;
         }
-        play(&mut selected_table, &mut player, &mut table);
-        game_over = check_game(&mut selected_table, &mut table, player);
+        play(&mut selected_table, &mut curr_player, &mut table);
+        game_over = check_game(&mut selected_table, &mut table, curr_player);
     }
 }
 
-fn menu() {
-    aarty -m aa.png
+fn menu(game_type: &mut i8) {
+    let ascii:String = fs::read_to_string("./img/img.txt")
+        .expect("why is the ascii file not there?");
+    loop {
+        println!("{}", ascii);
+        println!("How do you want to play?\n");
+        println!("1) Pass and Play");
+        println!("2) Random Bot");
+        let mut input = String::new();
+        io::stdin()
+            .read_line(&mut input)
+            .expect("could not readline");
+        match input.trim().parse::<i8>(){
+            Ok(number) => {
+                *game_type = number;
+                break;
+            }
+            Err(err) => {
+                println!("error: {}",err);
+            }
+        }
+    }
 }
 
-fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]) {
+fn play(selected_table : &mut usize, curr_player: &mut char, table: &mut [[char;9];9]) {
     clearscreen::clear().expect("failed to clear screen");
     println!("\x1B[1m\x1B[4m** PLAY GAME **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, *table);
-    println!("Player\x1B[1m {}\x1B[0m's turn \x1B[1m(1-9)\x1B[0m:", player);
+    println!("Player\x1B[1m {}\x1B[0m's turn \x1B[1m(1-9)\x1B[0m:", curr_player);
     loop {
         let mut input = String::new();
         io::stdin()
@@ -54,21 +76,21 @@ fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]
                     continue;
                 }
 
-                table[*selected_table - 1][number - 1] = *player;
+                table[*selected_table - 1][number - 1] = *curr_player;
                 
-                check_table(*selected_table, table, *player);
+                check_table(*selected_table, table, *curr_player);
 
                 *selected_table = number;
                 
 
-                if *player == 'x' {
-                    *player = 'o';
+                if *curr_player == 'x' {
+                    *curr_player = 'o';
                 } else {
-                    *player = 'x';
+                    *curr_player = 'x';
                 }
 
                 if table[*selected_table - 1][1] == '─'{
-                    select_table(selected_table, *table, *player);
+                    select_table(selected_table, *table, *curr_player);
                 }
 
                 break;
@@ -81,20 +103,20 @@ fn play(selected_table : &mut usize, player: &mut char, table: &mut [[char;9];9]
     }
 }
 
-fn check_table(selected_table: usize, table: &mut [[char;9];9], player: char){
-    if (table[selected_table - 1][0] == player && table[selected_table - 1][1] == player && table[selected_table - 1][2] == player)||
-    (table[selected_table - 1][3] == player && table[selected_table - 1][4] == player && table[selected_table - 1][5] == player) ||
-    (table[selected_table - 1][6] == player && table[selected_table - 1][7] == player && table[selected_table - 1][8] == player) ||
-    (table[selected_table - 1][0] == player && table[selected_table - 1][3] == player && table[selected_table - 1][6] == player) ||
-    (table[selected_table - 1][1] == player && table[selected_table - 1][4] == player && table[selected_table - 1][7] == player) ||
-    (table[selected_table - 1][2] == player && table[selected_table - 1][5] == player && table[selected_table - 1][8] == player) ||
-    (table[selected_table - 1][0] == player && table[selected_table - 1][4] == player && table[selected_table - 1][8] == player) ||
-    (table[selected_table - 1][2] == player && table[selected_table - 1][4] == player && table[selected_table - 1][6] == player) {
+fn check_table(selected_table: usize, table: &mut [[char;9];9], curr_player: char){
+    if (table[selected_table - 1][0] == curr_player && table[selected_table - 1][1] == curr_player && table[selected_table - 1][2] == curr_player)||
+    (table[selected_table - 1][3] == curr_player && table[selected_table - 1][4] == curr_player && table[selected_table - 1][5] == curr_player) ||
+    (table[selected_table - 1][6] == curr_player && table[selected_table - 1][7] == curr_player && table[selected_table - 1][8] == curr_player) ||
+    (table[selected_table - 1][0] == curr_player && table[selected_table - 1][3] == curr_player && table[selected_table - 1][6] == curr_player) ||
+    (table[selected_table - 1][1] == curr_player && table[selected_table - 1][4] == curr_player && table[selected_table - 1][7] == curr_player) ||
+    (table[selected_table - 1][2] == curr_player && table[selected_table - 1][5] == curr_player && table[selected_table - 1][8] == curr_player) ||
+    (table[selected_table - 1][0] == curr_player && table[selected_table - 1][4] == curr_player && table[selected_table - 1][8] == curr_player) ||
+    (table[selected_table - 1][2] == curr_player && table[selected_table - 1][4] == curr_player && table[selected_table - 1][6] == curr_player) {
         table[selected_table - 1][0] = '┌';
         table[selected_table - 1][1] = '─';
         table[selected_table - 1][2] = '┐';
         table[selected_table - 1][3] = '│';
-        table[selected_table - 1][4] = player;
+        table[selected_table - 1][4] = curr_player;
         table[selected_table - 1][5] = '│';
         table[selected_table - 1][6] = '└';
         table[selected_table - 1][7] = '─';
@@ -102,7 +124,7 @@ fn check_table(selected_table: usize, table: &mut [[char;9];9], player: char){
     }
 }
 
-fn check_game(selected_table: &mut usize, table: &mut [[char;9];9], player: char) -> bool{
+fn check_game(selected_table: &mut usize, table: &mut [[char;9];9], curr_player: char) -> bool{
     if (table[0][1] == '─' && table[1][1] == '─' && table[2][1] == '─' && table[0][4] == table[1][4] && table[0][4] == table[2][4]) ||
     (table[3][1] == '─' && table[4][1] == '─' && table[5][1] == '─' && table[3][4] == table[4][4] && table[3][4] == table[5][4]) ||
     (table[6][1] == '─' && table[7][1] == '─' && table[8][1] == '─' && table[6][4] == table[7][4] && table[6][4] == table[8][4]) ||
@@ -115,7 +137,7 @@ fn check_game(selected_table: &mut usize, table: &mut [[char;9];9], player: char
         println!("\x1B[1m\x1B[4m** o Won **\x1B[24m\x1B[0m\n");
         *selected_table = 10;
         draw_table(*selected_table, *table);
-        if player == 'x'{
+        if curr_player == 'x'{
             println!("\x1B[1m\x1B[4m** o Won **\x1B[24m\x1B[0m\n");
         }
         else{
@@ -196,12 +218,12 @@ fn draw_table(selected_table: usize, table: [[char;9];9]) {
     println!("└─┴─────┴─┴─────┴─┴─────┴─┘");
 }
 
-fn select_table(selected_table: &mut usize, table: [[char;9];9], player: char){
+fn select_table(selected_table: &mut usize, table: [[char;9];9], curr_player: char){
     clearscreen::clear().expect("failed to clear screen");
     *selected_table = 10;
     println!("\x1B[1m\x1B[4m** SELECT A TABLE **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, table);
-    println!("Which box do you want to play, \x1B[1m{}\x1B[0m? \x1B[1m(1-9)\x1B[0m", player);
+    println!("Which box do you want to play, \x1B[1m{}\x1B[0m? \x1B[1m(1-9)\x1B[0m", curr_player);
     
     loop {
         let mut input = String::new();
