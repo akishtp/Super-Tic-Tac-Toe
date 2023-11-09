@@ -25,6 +25,11 @@ fn main() {
         if game_over == true{
             break;
         }
+        
+        if table[selected_table - 1][1] == '─'{
+            select_table(&mut selected_table, table, curr_player);
+        }
+
         play(&mut selected_table, &mut curr_player, &mut table);
         game_over = check_game(&mut selected_table, &mut table, curr_player);
     }
@@ -34,10 +39,10 @@ fn menu(game_type: &mut i8) {
     let ascii:String = fs::read_to_string("./img/img.txt")
         .expect("why is the ascii file not there?");
     loop {
+        clearscreen::clear().expect("failed to clear screen");
         println!("{}", ascii);
-        println!("How do you want to play?\n");
-        println!("1) Pass and Play");
-        println!("2) Random Bot");
+        println!("1) Pass and Play\n2) Random Bot \n");
+        println!("How do you want to play?");
         let mut input = String::new();
         io::stdin()
             .read_line(&mut input)
@@ -87,10 +92,6 @@ fn play(selected_table : &mut usize, curr_player: &mut char, table: &mut [[char;
                     *curr_player = 'o';
                 } else {
                     *curr_player = 'x';
-                }
-
-                if table[*selected_table - 1][1] == '─'{
-                    select_table(selected_table, *table, *curr_player);
                 }
 
                 break;
@@ -247,7 +248,7 @@ fn select_table(selected_table: &mut usize, table: [[char;9];9], curr_player: ch
                 break;
             }
             Err(_) => {
-                eprintln!("Enter a smaller positive number");
+                eprintln!("Select a number between 1 and 9");
                 continue;
             }
         }
