@@ -21,7 +21,11 @@ fn main() {
     let mut player: char = ' ';
 
     menu(&mut game_type, &mut player);
-    select_table(&mut selected_table, table, curr_player);
+    if game_type !=1 && player == curr_player {
+        select_table(&mut selected_table, table, curr_player);
+    } else {
+        random_select_table(table, &mut selected_table);
+    }
  
     loop{
         if game_over == true{
