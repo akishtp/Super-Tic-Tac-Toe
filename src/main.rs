@@ -93,7 +93,7 @@ fn random_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
 fn menu(game_type: &mut i8, player: &mut char) {
     let ascii:String = fs::read_to_string("./img/img.txt")
         .expect("you sure you copied all my files?");
-    //clearscreen::clear().expect("failed to clear screen");
+    clearscreen::clear().expect("failed to clear screen");
     println!("{}", ascii);
     println!("1) Pass and Play\n2) Random Bot \n");
     println!("How do you want to play?");
@@ -145,7 +145,7 @@ fn menu(game_type: &mut i8, player: &mut char) {
 }
 
 fn play(selected_table : &mut usize, curr_player: &mut char, table: &mut [[char;9];9]) {
-    //clearscreen::clear().expect("failed to clear screen");
+    clearscreen::clear().expect("failed to clear screen");
     println!("\x1B[1m\x1B[4m** PLAY GAME **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, *table);
     println!("Player\x1B[1m {}\x1B[0m's turn \x1B[1m(1-9)\x1B[0m:", curr_player);
@@ -220,7 +220,7 @@ fn check_game(selected_table: &mut usize, table: &mut [[char;9];9], curr_player:
     (table[2][1] == '─' && table[5][1] == '─' && table[8][1] == '─' && table[2][4] == table[5][4] && table[2][4] == table[8][4]) ||
     (table[0][1] == '─' && table[4][1] == '─' && table[8][1] == '─' && table[0][4] == table[4][4] && table[0][4] == table[8][4]) ||
     (table[2][1] == '─' && table[4][1] == '─' && table[6][1] == '─' && table[2][4] == table[4][4] && table[2][4] == table[6][4]) {
-        //clearscreen::clear().expect("failed to clear screen");
+        clearscreen::clear().expect("failed to clear screen");
         *selected_table = 10;
         if curr_player == 'x'{
             println!("\x1B[1m\x1B[4m** o Won **\x1B[24m\x1B[0m\n");
@@ -305,7 +305,7 @@ fn draw_table(selected_table: usize, table: [[char;9];9]) {
 }
 
 fn select_table(selected_table: &mut usize, table: [[char;9];9], curr_player: char){
-    //clearscreen::clear().expect("failed to clear screen");
+    clearscreen::clear().expect("failed to clear screen");
     *selected_table = 10;
     println!("\x1B[1m\x1B[4m** SELECT A TABLE **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, table);
