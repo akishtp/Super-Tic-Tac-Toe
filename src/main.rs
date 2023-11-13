@@ -32,11 +32,28 @@ fn main() {
 
         loop{
             if game_over == true{
-                println!("wanna play again?");
-                let mut input = String::new();
-                io::stdin()
-                    .read_line(&mut input)
-                    .expect("could not readline");
+                loop {
+                    let mut input = String::new();
+                    if game_type == 0 {
+                        println!("The bots had a fun time playing without you\nLast chance to join..\n(y = join / n = leave)");
+                    }
+                    else{
+                        println!("Wanna play again? (y/n)");
+                    }
+                    io::stdin()
+                        .read_line(&mut input)
+                        .expect("could not readline");
+                    input = input.trim().to_string();
+                    if input == "y" || input == "n"{
+                        if input == "y" { quit_program = false; }
+                        else if input == "n" { quit_program = true; }
+                    }
+                    else{
+                        println!("Choose either y or n");
+                        continue;
+                    }
+                    break;
+                }
                 break;
             }
             if game_type != 1 && player != curr_player{
@@ -52,6 +69,10 @@ fn main() {
             }
             game_over = check_game(&mut selected_table, &mut table, curr_player);
         }
+        if quit_program == false {
+            continue;
+        }
+        break;
     }
 }
 
@@ -60,18 +81,11 @@ fn random_select_table(table: [[char;9];9], selected_table: &mut usize) {
         .filter(|(_, inner_array)| inner_array[1] != '─')
         .map(|(i, _)| i)
         .collect();
-    
-    if playable_table.is_empty() {
-        println!("ith enth mayajalam");
-    } else {
-        println!("botnn kalikkan pattunna tables are {:?}", playable_table);
-        let mut rng = rand::thread_rng();
-        let random_index = rng.gen_range(0..playable_table.len());
-        let number = playable_table[random_index];
-        println!("and he chose to play {}", number);
+    let mut rng = rand::thread_rng();
+    let random_index = rng.gen_range(0..playable_table.len());
+    let number = playable_table[random_index];
 
-        *selected_table = number + 1;
-    }
+    *selected_table = number + 1;
 }
 
 fn random_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &mut [[char;9];9]) {
@@ -79,35 +93,28 @@ fn random_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
         .filter(|&(_, &c)| c == ' ')
         .map(|(i, _)| i)
         .collect();
-    if empty_positions.is_empty() {
-        println!("ith enth mayajalam");
-    } else {
-        draw_table(*selected_table, *table);
-        println!("bot is may play at {:?}", empty_positions);
+
+    let mut rng = rand::thread_rng();
     
-        let mut rng = rand::thread_rng();
-      
-        loop {
-            let random_index = rng.gen_range(0..empty_positions.len());
+    loop {
+        let random_index = rng.gen_range(0..empty_positions.len());
 
-            let number = empty_positions[random_index];
-            println!("bot will play at {}", number);
+        let number = empty_positions[random_index];
 
-            if table[*selected_table - 1][number] != ' '{
-                continue;
-            }
-
-            table[*selected_table - 1][number] = *curr_player;
-            check_table(*selected_table, table, *curr_player);
-
-            *selected_table = number + 1;
-            if *curr_player == 'x' {
-                *curr_player = 'o';
-            } else {
-                *curr_player = 'x';
-            }
-            break;
+        if table[*selected_table - 1][number] != ' '{
+            continue;
         }
+
+        table[*selected_table - 1][number] = *curr_player;
+        check_table(*selected_table, table, *curr_player);
+
+        *selected_table = number + 1;
+        if *curr_player == 'x' {
+            *curr_player = 'o';
+        } else {
+            *curr_player = 'x';
+        }
+        break;
     }
 }
 
@@ -139,7 +146,6 @@ fn menu(game_type: &mut i8, player: &mut char, quit_program: &mut bool) {
             }
         }
     }
-    println!("kittipoyi gamete = {}", *game_type);
     if *game_type == 2 || *game_type == 3 {
         println!("Which player are you? \x1B[24m(x or o)\x1B[0m");
         loop{
