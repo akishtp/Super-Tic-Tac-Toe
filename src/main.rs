@@ -95,26 +95,16 @@ fn random_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
         .collect();
 
     let mut rng = rand::thread_rng();
-    
-    loop {
-        let random_index = rng.gen_range(0..empty_positions.len());
+    let random_index = rng.gen_range(0..empty_positions.len());
+    let number = empty_positions[random_index];
+    table[*selected_table - 1][number] = *curr_player;
+    check_table(*selected_table, table, *curr_player);
 
-        let number = empty_positions[random_index];
-
-        if table[*selected_table - 1][number] != ' '{
-            continue;
-        }
-
-        table[*selected_table - 1][number] = *curr_player;
-        check_table(*selected_table, table, *curr_player);
-
-        *selected_table = number + 1;
-        if *curr_player == 'x' {
-            *curr_player = 'o';
-        } else {
-            *curr_player = 'x';
-        }
-        break;
+    *selected_table = number + 1;
+    if *curr_player == 'x' {
+        *curr_player = 'o';
+    } else {
+        *curr_player = 'x';
     }
 }
 
