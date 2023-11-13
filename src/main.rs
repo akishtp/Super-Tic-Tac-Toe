@@ -57,10 +57,17 @@ fn main() {
                 break;
             }
             if game_type != 1 && player != curr_player{
-                if table[selected_table - 1][1] == '─'{
-                    random_select_table(table, &mut selected_table);
+                if game_type == 2 || game_type == 0 {
+                    if table[selected_table - 1][1] == '─'{
+                        random_select_table(table, &mut selected_table);
+                    }
+                    random_bot_play(&mut selected_table, &mut curr_player, &mut table);
+                } else if game_type == 3 {
+                    if table[selected_table - 1][1] == '─'{
+                        random_select_table(table, &mut selected_table);
+                    }
+                    minmax_bot_play(&mut selected_table, &mut curr_player, &mut table);
                 }
-                random_bot_play(&mut selected_table, &mut curr_player, &mut table);
             }else{
                 if table[selected_table - 1][1] == '─'{
                     select_table(&mut selected_table, table, curr_player);
@@ -106,6 +113,13 @@ fn random_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
     } else {
         *curr_player = 'x';
     }
+}
+
+fn minmax_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &mut [[char;9];9]) {
+    let empty_positions: Vec<usize> = table[*selected_table - 1].iter().enumerate()
+        .filter(|&(_, &c)| c == ' ')
+        .map(|(i, _)| i)
+        .collect();
 }
 
 fn menu(game_type: &mut i8, player: &mut char, quit_program: &mut bool) {
