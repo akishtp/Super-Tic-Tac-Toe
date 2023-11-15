@@ -1,7 +1,10 @@
 # Super Tic-Tac-Toe
 
-checklist
+## checklist
 
-1. Game
-2. Bot
-3. Online
+i) Game 👍
+ii) Random bot 👍
+iii) Bots playing alone 🤏
+iv) Smarter bot 🤥
+v) Online ❌
+

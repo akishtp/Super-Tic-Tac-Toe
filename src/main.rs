@@ -120,12 +120,29 @@ fn minmax_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
         .filter(|&(_, &c)| c == ' ')
         .map(|(i, _)| i)
         .collect();
+
+    let mut rng = rand::thread_rng();
+    let random_index = rng.gen_range(0..empty_positions.len());
+    let number = empty_positions[random_index];
+    table[*selected_table - 1][number] = *curr_player;
+    check_table(*selected_table, table, *curr_player);
+
+    *selected_table = number + 1;
+    if *curr_player == 'x' {
+        *curr_player = 'o';
+    } else {
+        *curr_player = 'x';
+    }
+}
+
+fn minimax(board: [char;9]) -> isize {
+    1
 }
 
 fn menu(game_type: &mut i8, player: &mut char, quit_program: &mut bool) {
     let ascii:String = fs::read_to_string("./img/img.txt")
         .expect("you sure you copied all my files?");
-    clearscreen::clear().expect("failed to clear screen");
+    //clearscreen::clear().expect("failed to clear screen");
     println!("{}", ascii);
     println!("1) Pass and Play\n2) Random Bot \n3) Minimax Bot\n\n0) quit\n");
     println!("How do you want to play?");
@@ -180,7 +197,7 @@ fn menu(game_type: &mut i8, player: &mut char, quit_program: &mut bool) {
 }
 
 fn play(selected_table : &mut usize, curr_player: &mut char, table: &mut [[char;9];9]) {
-    clearscreen::clear().expect("failed to clear screen");
+    //clearscreen::clear().expect("failed to clear screen");
     println!("\x1B[1m\x1B[4m** PLAY GAME **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, *table);
     println!("Player\x1B[1m {}\x1B[0m's turn \x1B[1m(1-9)\x1B[0m:", curr_player);
@@ -265,7 +282,7 @@ fn check_game(selected_table: &mut usize, table: &mut [[char;9];9], curr_player:
         .filter(|(_, inner_array)| inner_array[1] != '─')
         .map(|(i, _)| i)
         .collect();
-    clearscreen::clear().expect("failed to clear screen");
+    //clearscreen::clear().expect("failed to clear screen");
 
     if (table[0][1] == '─' && table[1][1] == '─' && table[2][1] == '─' && table[0][4] == table[1][4] && table[0][4] == table[2][4]  ) ||
     (table[3][1] == '─' && table[4][1] == '─' && table[5][1] == '─' && table[3][4] == table[4][4] && table[3][4] == table[5][4]) ||
@@ -364,7 +381,7 @@ fn draw_table(selected_table: usize, table: [[char;9];9]) {
 }
 
 fn select_table(selected_table: &mut usize, table: [[char;9];9], curr_player: char){
-    clearscreen::clear().expect("failed to clear screen");
+    //clearscreen::clear().expect("failed to clear screen");
     *selected_table = 10;
     println!("\x1B[1m\x1B[4m** SELECT A TABLE **\x1B[24m\x1B[0m\n");
     draw_table(*selected_table, table);
