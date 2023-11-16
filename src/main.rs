@@ -96,6 +96,7 @@ fn random_select_table(table: [[char;9];9], selected_table: &mut usize) {
 }
 
 fn random_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &mut [[char;9];9]) {
+    // add an interval of like 1sec or sm
     let empty_positions: Vec<usize> = table[*selected_table - 1].iter().enumerate()
         .filter(|&(_, &c)| c == ' ')
         .map(|(i, _)| i)
@@ -121,9 +122,19 @@ fn minmax_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
         .map(|(i, _)| i)
         .collect();
 
-    let mut rng = rand::thread_rng();
-    let random_index = rng.gen_range(0..empty_positions.len());
-    let number = empty_positions[random_index];
+    let mut best_move: i32 = -1;
+    let mut best_score: i32 = -10;
+
+    for i in 0..(empty_positions.len()) {
+        let score: i32 = minimax(table[*selected_table - 1], 0, true);
+
+        if score > best_score {
+            println!("score{} best_score{}", score, best_score);
+            best_score = score;
+            best_move = i as i32;
+        }
+    }
+    let number = empty_positions[best_move as usize];
     table[*selected_table - 1][number] = *curr_player;
     check_table(*selected_table, table, *curr_player);
 
@@ -135,7 +146,7 @@ fn minmax_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
     }
 }
 
-fn minimax(board: [char;9]) -> isize {
+fn minimax(board: [char;9], depth: u8, is_maximizing: bool) -> i32 {
     1
 }
 
