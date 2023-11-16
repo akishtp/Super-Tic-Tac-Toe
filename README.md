@@ -2,9 +2,9 @@
 
 ## checklist
 
-i) Game 👍
-ii) Random bot 👍
-iii) Bots playing alone 🤏
-iv) Smarter bot 🤥
-v) Online ❌
+1. Game 👍
+2. Random bot 👍
+3. Bots playing alone 🤏
+4. Smarter bot 🤥
+5. Online ❌
 
