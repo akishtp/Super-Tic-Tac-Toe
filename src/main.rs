@@ -126,7 +126,7 @@ fn minmax_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
     let mut best_score: i32 = -10;
 
     for i in 0..(empty_positions.len()) {
-        let score: i32 = minimax(table[*selected_table - 1], 0, true);
+        let score: i32 = minimax(table[*selected_table - 1], 0, true, *curr_player);
 
         if score > best_score {
             println!("score{} best_score{}", score, best_score);
@@ -146,13 +146,19 @@ fn minmax_bot_play(selected_table: &mut usize, curr_player: &mut char, table: &m
     }
 }
 
-fn minimax(board: [char;9], depth: u8, is_maximizing: bool) -> i32 {
-    1
+fn minimax(board: [char;9], depth: u8, is_maximizing: bool, curr_player: char) -> i32 {
+    let result = just_check_table(board, curr_player);
+    if is_maximizing {
+        //
+    } else {
+        //
+    }
+    0
 }
 
 fn menu(game_type: &mut i8, player: &mut char, quit_program: &mut bool) {
     let ascii:String = fs::read_to_string("./img/img.txt")
-        .expect("you sure you copied all my files?");
+        .expect("You sure you copied all my files?");
     //clearscreen::clear().expect("failed to clear screen");
     println!("{}", ascii);
     println!("1) Pass and Play\n2) Random Bot \n3) Minimax Bot\n\n0) quit\n");
@@ -251,6 +257,18 @@ fn play(selected_table : &mut usize, curr_player: &mut char, table: &mut [[char;
         }
     }
 
+}
+
+fn just_check_table(board: [char;9], curr_player: char) -> isize {
+    if board[0] != ' ' && board[0] == board[1] && board[0] == board[2] {if curr_player == board[0] { 1 } else { -1 }}
+    else if board[3] != ' ' && board[3] == board[4] && board[3] == board[5] {if curr_player == board[3] { 1 } else { -1 }}
+    else if board[6] != ' ' && board[6] == board[7] && board[6] == board[8] {if curr_player == board[6] { 1 } else { -1 }}
+    else if board[0] != ' ' && board[0] == board[3] && board[0] == board[6] {if curr_player == board[0] { 1 } else { -1 }}
+    else if board[1] != ' ' && board[1] == board[4] && board[1] == board[7] {if curr_player == board[1] { 1 } else { -1 }}
+    else if board[2] != ' ' && board[2] == board[5] && board[2] == board[8] {if curr_player == board[2] { 1 } else { -1 }}
+    else if board[0] != ' ' && board[0] == board[4] && board[0] == board[8] {if curr_player == board[0] { 1 } else { -1 }}
+    else if board[2] != ' ' && board[2] == board[4] && board[2] == board[6] {if curr_player == board[2] { 1 } else { -1 }}
+    else { 0 }
 }
 
 fn check_table(selected_table: usize, table: &mut [[char;9];9], curr_player: char){
